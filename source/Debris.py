@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import Constants
+import GeometryFuncs
 
 
 class Debris():
@@ -26,15 +27,10 @@ class Debris():
 
         # Loop through all the z values of the orbit
         for x,z in zip(points[0],points[2]):
-            # Calculate the latitude the object is at when it is at this z value
-            theta=self.DegreesToRadians(self.inclination)
-            r=(x/abs(x))*math.sqrt(math.pow(x,2)+math.pow(z,2))
-            realZ=r*math.sin(theta)
-            if(abs(realZ)<Constants.EARTH_R):
-                latVal=round(self.RadiansToDegrees(math.asin(realZ/Constants.EARTH_R)))
-                # If it is within the right range add one to that latitude
-                if(latVal>-90 and latVal<90):
-                    latitudePercent[90+latVal]=latitudePercent[90+latVal]+1
+            latVal=GeometryFuncs.ZValToLatitude(x, z, self.inclination)
+
+            if(latVal!=-999):
+                latitudePercent[90+latVal]=latitudePercent[90+latVal]+1
 
         # Convert all the latitudes into percentages based on the number of points in the orbit
         latitudePercent=[x / len(points[2]) for x in latitudePercent]
@@ -47,15 +43,6 @@ class Debris():
         latitudePercents=self.GetPercentageAtLatitudes()
         return([x * Constants.MINUTES_IN_YEAR for x in latitudePercents])
 
-    # METHOD DegreesToRadians: Converts degrees to radians
-    # PARAMETER degrees: Value of degrees to be converted 
-    def DegreesToRadians(self, degrees):
-        return degrees*math.pi/180
-    
-    # METHOD RadiansToDegrees: Converts radians to degrees
-    # PARAMETER radians: Value in radians to be converted
-    def RadiansToDegrees(self, radians):
-        return radians*180/math.pi
 
     # METHOD GetPointsOfOrbit: Gets the points in 3d space that can be used to plot the orbit
     # PARAMETER planetD: Diameter of planet the orbit will be plotted around
