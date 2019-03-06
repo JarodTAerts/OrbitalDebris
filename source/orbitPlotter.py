@@ -22,7 +22,8 @@ for index, row in debrisDF.iterrows():
     newDeb=Debris(row['SATNAME'], row['OBJECT_TYPE'], row['PERIOD'], row['INCLINATION'], row['APOGEE'], row['PERIGEE'], row['RCS_SIZE'])
     debrisList.append(newDeb)
 
-
+if(Constants.NUM_ORBITS_PLOTTED == 0): 
+    Constants.NUM_ORBITS_PLOTTED = len(debrisList)
 
 if(Constants.PLOT_ENERGY):
     print("Getting Surface Area per Latitude...")
