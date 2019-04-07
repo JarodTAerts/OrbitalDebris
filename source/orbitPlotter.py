@@ -32,6 +32,9 @@ if(Constants.PLOT_ENERGY):
     latReflectedEnergy=DataFuncs.GetTotalBlockedEnergyAtEachLatitude(latSurfArea)
     latReflectedEnergy=[x/1000 for x in latReflectedEnergy]
 
+    csvDF = pd.DataFrame(data={"Latitude":lats, "Blocked":latReflectedEnergy})
+    csvDF.to_csv('./data/blocked.csv', sep=',')
+
     print("Plotting Solar Energy...")
     plt.plot(lats, latReflectedEnergy)
     plt.suptitle("Solar Energy Blocked or Absorbed by Orbital Debris")
